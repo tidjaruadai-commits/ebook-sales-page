@@ -1,11 +1,20 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import styles from './page.module.css';
 
-export default function Home() {
+function HomeContent() {
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get('success')) {
+      setIsSuccess(true);
+    }
+  }, [searchParams]);
 
   const handleCheckout = async () => {
     try {
@@ -17,7 +26,7 @@ export default function Home() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert('Failed to initiate checkout.');
+        alert(data.error || 'Failed to initiate checkout. Please check your API keys.');
       }
     } catch (err) {
       console.error(err);
@@ -26,6 +35,20 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  if (isSuccess) {
+    return (
+      <main className="container main-content" style={{ textAlign: 'center', minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <h1 className="title gradient-text" style={{ fontSize: '3rem' }}>Payment Successful!</h1>
+        <p className="subtitle" style={{ margin: '2rem 0' }}>
+          Thank you for your purchase. We have sent the ebook to your email.
+        </p>
+        <button className={styles.ctaButton} onClick={() => window.location.href = '/'}>
+          Return to Home
+        </button>
+      </main>
+    );
+  }
 
   return (
     <main className="container main-content">
@@ -105,5 +128,13 @@ export default function Home() {
         </button>
       </section>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '5rem' }}>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

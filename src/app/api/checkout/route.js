@@ -9,6 +9,12 @@ export async function POST(request) {
     // Determine the base URL for the success/cancel pages
     const origin = request.headers.get('origin') || 'http://localhost:3000';
 
+    // If using the dummy key, bypass Stripe and simulate success for demo purposes
+    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'sk_test_123') {
+      console.log('Using dummy Stripe key. Bypassing Stripe and returning mock success URL.');
+      return NextResponse.json({ url: `${origin}/?success=true` });
+    }
+
     // Create Checkout Sessions from body params.
     const session = await stripe.checkout.sessions.create({
       line_items: [
