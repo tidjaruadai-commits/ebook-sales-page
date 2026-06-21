@@ -108,7 +108,7 @@ function HomeContent() {
         <p style={{ color: '#94a3b8', marginTop: '0.5rem' }}>One-time payment for lifetime access.</p>
         
         <div className={styles.priceTag}>
-          <span className={styles.currency}>$</span>29
+          <span className={styles.currency}>฿</span>990
         </div>
         
         <ul className={styles.pricingList}>
@@ -124,7 +124,7 @@ function HomeContent() {
           onClick={handleCheckout}
           disabled={loading}
         >
-          {loading ? 'Processing...' : 'Buy Now - $29'}
+          {loading ? 'Processing...' : 'Buy Now - ฿990'}
         </button>
       </section>
     </main>

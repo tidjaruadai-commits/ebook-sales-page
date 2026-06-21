@@ -17,16 +17,17 @@ export async function POST(request) {
 
     // Create Checkout Sessions from body params.
     const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card', 'promptpay'],
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency: 'thb',
             product_data: {
               name: 'Mastering Agentic AI Ebook',
               description: 'The complete guide to building autonomous AI agents.',
               // images: [`${origin}/ebook-cover.png`],
             },
-            unit_amount: 2900, // $29.00
+            unit_amount: 99000, // 990.00 THB
           },
           quantity: 1,
         },
