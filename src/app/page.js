@@ -1,65 +1,109 @@
-import Image from "next/image";
+'use client';
+
+import Image from 'next/image';
+import { useState } from 'react';
+import styles from './page.module.css';
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to initiate checkout.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+    <main className="container main-content">
+      {/* Hero Section */}
+      <section className={`${styles.hero} animate-fade-in-up`}>
+        <div className={styles.heroContent}>
+          <span className={styles.badge}>New Release</span>
+          <h1 className={styles.title}>
+            Mastering <span className="gradient-text">Agentic AI</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className={styles.subtitle}>
+            Discover how to build, deploy, and scale autonomous AI agents. The ultimate guide for modern developers to stay ahead of the curve.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button 
+            className={styles.ctaButton} 
+            onClick={handleCheckout}
+            disabled={loading}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            {loading ? 'Loading...' : 'Get Instant Access'}
+          </button>
         </div>
-      </main>
-    </div>
+        <div className={styles.heroImageContainer}>
+          {/* We will use a regular img tag or next/image for the ebook cover */}
+          <img 
+            src="/ebook-cover.png" 
+            alt="Mastering Agentic AI Ebook Cover" 
+            className={styles.ebookMockup}
+          />
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="glass-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem' }}>What You'll Learn</h2>
+        <div className={styles.features}>
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>🤖</div>
+            <h3 className={styles.featureTitle}>Core Fundamentals</h3>
+            <p className={styles.featureDesc}>Understand the architecture of LLM-based autonomous agents and how they reason.</p>
+          </div>
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>⚡️</div>
+            <h3 className={styles.featureTitle}>Tool Integration</h3>
+            <p className={styles.featureDesc}>Learn how to equip your AI with external tools, APIs, and databases for real-world impact.</p>
+          </div>
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>🛡️</div>
+            <h3 className={styles.featureTitle}>Safety & Scaling</h3>
+            <p className={styles.featureDesc}>Best practices for deploying secure, reliable, and scalable agentic systems to production.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className={`glass-card animate-fade-in-up ${styles.pricing}`} style={{ animationDelay: '0.4s' }}>
+        <h2>Simple, Transparent Pricing</h2>
+        <p style={{ color: '#94a3b8', marginTop: '0.5rem' }}>One-time payment for lifetime access.</p>
+        
+        <div className={styles.priceTag}>
+          <span className={styles.currency}>$</span>29
+        </div>
+        
+        <ul className={styles.pricingList}>
+          <li>Complete PDF Ebook (200+ Pages)</li>
+          <li>Source Code Examples</li>
+          <li>Free Lifetime Updates</li>
+          <li>Access to Private Discord Community</li>
+        </ul>
+
+        <button 
+          className={styles.ctaButton} 
+          style={{ width: '100%', padding: '1.25rem' }}
+          onClick={handleCheckout}
+          disabled={loading}
+        >
+          {loading ? 'Processing...' : 'Buy Now - $29'}
+        </button>
+      </section>
+    </main>
   );
 }
